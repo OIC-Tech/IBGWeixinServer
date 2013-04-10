@@ -2,11 +2,14 @@ package com.louishong.ibg;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
+import javax.servlet.ServletInputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
 
 @WebServlet("/")
 public class WeixinServer extends HttpServlet {
@@ -15,38 +18,36 @@ public class WeixinServer extends HttpServlet {
      * 
      */
     
-    PrintWriter out;
-    
     private static final long serialVersionUID = 7277121887678658652L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 	System.out.println(request.getRemoteHost());
+	PrintWriter out;
+	ServletInputStream streamIn;
 	
-	// Set Response Type
-	response.setContentType("text/xml;charset=UTF-8");
+	DocumentBuilderFactory DocBuilderFactory;
+	DocumentBuilder DocBuilder;
+	Document doc = null;
+	
 	try {
-	    request.setCharacterEncoding("UTF-8");
-	    out = response.getWriter();
-	} catch (IOException e) {
-	    e.printStackTrace();
+		out = response.getWriter();
+	} catch (IOException e1) {
+		e1.printStackTrace();
+		return;
 	}
+	
+	try {
+		streamIn = request.getInputStream();
+		DocBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocBuilder = DocBuilderFactory.newDocumentBuilder();
+		doc = DocBuilder.parse(streamIn);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	
+	out.println(doc.getElementById("list"));
+	System.out.println(doc.getElementById("list"));
 
-	// Get Request Parameters
-	String requestSignature = request.getParameter("signature");
-	String requestTimeStamp = request.getParameter("timestamp");
-	String requestNonce = request.getParameter("nonce");
-	String requestEchoStr = request.getParameter("echostr");
-	
-	System.out.println(requestSignature);
-	System.out.println(requestTimeStamp);
-	System.out.println(requestNonce);
-	System.out.println(requestEchoStr);
-	
-	//Return XML
-	out.print(requestEchoStr);
-	
-	out.flush();
-	out.close();
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
