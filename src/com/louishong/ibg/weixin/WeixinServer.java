@@ -62,7 +62,7 @@ public class WeixinServer extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) {
-		
+
 		// Get Writer
 		PrintWriter out = null;
 		try {
@@ -70,7 +70,10 @@ public class WeixinServer extends HttpServlet {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		out.print(respondRequest(request));
+	}
 
+	protected WeixinMessage readRequest(HttpServletRequest request) {
 		// Set stream up with the Stax Parser
 		try {
 			InputStream requestInputStream = request.getInputStream();
@@ -89,81 +92,90 @@ public class WeixinServer extends HttpServlet {
 					// get element as StartElement and inputs into the
 					// WeixinMessage
 					StartElement startElement = event.asStartElement();
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.TO_USER_NAME)) {
+					// if it is ToUserName
+					if (startElement.getName().getLocalPart()
+							.equals(WeixinMessage.TO_USER_NAME)) {
 						event = eventReader.nextEvent();
 						message.setToUserName(event.asCharacters().getData());
 						continue;
 					}
-				}
 
-				if (event.isStartElement()) {
-					// get element as StartElement and inputs into the
-					// WeixinMessage
-					StartElement startElement = event.asStartElement();
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.FROM_USER_NAME)) {
+					// if it is FromUserName
+					if (startElement.getName().getLocalPart()
+							.equals(WeixinMessage.FROM_USER_NAME)) {
 						event = eventReader.nextEvent();
 						message.setFromUserName(event.asCharacters().getData());
 						continue;
 					}
-				}
 
-				if (event.isStartElement()) {
-					// get element as StartElement and inputs into the
-					// WeixinMessage
-					StartElement startElement = event.asStartElement();
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.CREATE_TIME)) {
+					// if it is CreateTime
+					if (startElement.getName().getLocalPart()
+							.equals(WeixinMessage.CREATE_TIME)) {
 						event = eventReader.nextEvent();
 						message.setCreateTime(event.asCharacters().getData());
 						continue;
 					}
-				}
-
-				if (event.isStartElement()) {
-					// get element as StartElement and checks what type it is
-					// makes the object according to the type and converts
-					// objects
-					StartElement startElement = event.asStartElement();
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.MSG_TYPE)) {
+					// if it is MsgType
+					if (startElement.getName().getLocalPart()
+							.equals(WeixinMessage.MSG_TYPE)) {
 						event = eventReader.nextEvent();
 						String type = event.asCharacters().getData();
 						message.setMsgType(type);
 
 						if (type.equals(WeixinMessage.TEXT)) {
 							Text text = new Text(message);
-							
+
 							while (eventReader.hasNext()) {
 								event = eventReader.nextEvent();
 								if (event.isStartElement()) {
 									StartElement textStartElement = event
 											.asStartElement();
 									if (textStartElement.getName()
-											.getLocalPart().equals(Text.CONTENT)) {
+											.getLocalPart()
+											.equals(Text.CONTENT)) {
 										event = eventReader.nextEvent();
-										text.setContent(event
-												.asCharacters().getData());
+										text.setContent(event.asCharacters()
+												.getData());
 									}
 									if (textStartElement.getName()
 											.getLocalPart().equals(Text.MSGID)) {
 										event = eventReader.nextEvent();
-										text.setMsgId(event
-												.asCharacters().getData());
+										text.setMsgId(event.asCharacters()
+												.getData());
 									}
 								}
 							}
 							message = text;
-							out.println(((Text)message).toString());
+							return message;
 						}
 					}
 				}
-
 			}
-			out.println();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (XMLStreamException e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+
+	protected String respondRequest(HttpServletRequest request) {
+		WeixinMessage message = readRequest(request);
+		if (((Text) message).getMsgType().equals(WeixinMessage.TEXT)) {
+			String response = String.format("<xml>\n"
+					+ "<ToUserName><![CDATA[%s]]></ToUserName>\n"
+					+ "<FromUserName><![CDATA[%s]]></FromUserName>\n"
+					+ "<CreateTime>%s</CreateTime>\n"
+					+ "<MsgType><![CDATA[text]]></MsgType>\n"
+					+ "<Content><![CDATA[%s]]></Content>\n"
+					+ "<FuncFlag>0</FuncFlag>\n" + "</xml>",
+					((Text) message).getFromUserName(),
+					((Text) message).getToUserName(),
+					((Text) message).getCreateTime(), "Hello World!");
+			return response;
+		}
+		return null;
 
 	}
 
