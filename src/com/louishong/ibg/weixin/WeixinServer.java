@@ -24,7 +24,7 @@ public class WeixinServer extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) {
-		System.out.println(request.getRemoteHost());
+		// System.out.println(request.getRemoteHost());
 		PrintWriter out = null;
 		try {
 			out = response.getWriter();
@@ -47,10 +47,10 @@ public class WeixinServer extends HttpServlet {
 		String requestNonce = request.getParameter("nonce");
 		String requestEchoStr = request.getParameter("echostr");
 
-		System.out.println(requestSignature);
-		System.out.println(requestTimeStamp);
-		System.out.println(requestNonce);
-		System.out.println(requestEchoStr);
+		// System.out.println(requestSignature);
+		// System.out.println(requestTimeStamp);
+		// System.out.println(requestNonce);
+		// System.out.println(requestEchoStr);
 
 		// Return XML
 		out.print(requestEchoStr);
@@ -64,13 +64,13 @@ public class WeixinServer extends HttpServlet {
 			HttpServletResponse response) {
 
 		// Get Writer
-		PrintWriter out = null;
 		try {
-			out = response.getWriter();
+			PrintWriter out = response.getWriter();
+			System.out.println("Connection Success");
+			out.print(respondRequest(request));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		out.print(respondRequest(request));
 	}
 
 	protected WeixinMessage readRequest(HttpServletRequest request) {
@@ -173,6 +173,7 @@ public class WeixinServer extends HttpServlet {
 					((Text) message).getFromUserName(),
 					((Text) message).getToUserName(),
 					((Text) message).getCreateTime(), "Hello World!");
+			System.out.println(message.getToUserName());
 			return response;
 		}
 		return null;
