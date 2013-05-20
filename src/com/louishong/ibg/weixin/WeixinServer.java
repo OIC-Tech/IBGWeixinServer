@@ -69,7 +69,7 @@ public class WeixinServer extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) {
-
+		response.setContentType("text/xml;charset=UTF-8");
 		// Get Writer
 		try {
 			PrintWriter out = response.getWriter();
@@ -83,6 +83,7 @@ public class WeixinServer extends HttpServlet {
 	protected WeixinMessage readRequest(HttpServletRequest request) {
 		// Set stream up with the Stax Parser
 		try {
+			request.setCharacterEncoding("UTF-8");
 			InputStream requestInputStream = request.getInputStream();
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			XMLEventReader eventReader = factory
@@ -192,8 +193,9 @@ public class WeixinServer extends HttpServlet {
 			StartDocument startDocument = xmlEventFactory.createStartDocument(
 					"UTF-8", "1.0");
 			writer.add(startDocument);
-			
-			StartElement rootStartElement = xmlEventFactory.createStartElement("", "", "xml");
+
+			StartElement rootStartElement = xmlEventFactory.createStartElement(
+					"", "", "xml");
 
 			StartElement toUserNameStartElement = xmlEventFactory
 					.createStartElement("", "", "ToUserName");
@@ -224,7 +226,7 @@ public class WeixinServer extends HttpServlet {
 					"", "Type");
 
 			writer.add(rootStartElement);
-			
+
 			writer.add(toUserNameStartElement);
 			writer.add(toUserNameChar);
 			writer.add(toUserNameEndElement);
@@ -253,7 +255,8 @@ public class WeixinServer extends HttpServlet {
 				StartElement funcFlagStartElement = xmlEventFactory
 						.createStartElement("", "", "funcFlagStartElement");
 				Characters funcFlagChar = xmlEventFactory.createCharacters("0");
-				EndElement funcFlagEndElement = xmlEventFactory.createEndElement("", "", "FuncFlag");
+				EndElement funcFlagEndElement = xmlEventFactory
+						.createEndElement("", "", "FuncFlag");
 
 				writer.add(contentStartElement);
 				writer.add(contentChar);
@@ -263,13 +266,14 @@ public class WeixinServer extends HttpServlet {
 				writer.add(funcFlagChar);
 				writer.add(funcFlagEndElement);
 			}
-			
-			EndElement rootEndElement = xmlEventFactory.createEndElement("", "", "xml");
+
+			EndElement rootEndElement = xmlEventFactory.createEndElement("",
+					"", "xml");
 			writer.add(rootEndElement);
-			
+
 			EndDocument endDocument = xmlEventFactory.createEndDocument();
 			writer.add(endDocument);
-			
+
 			writer.flush();
 			writer.close();
 
