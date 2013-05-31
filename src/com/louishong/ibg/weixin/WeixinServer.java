@@ -49,18 +49,18 @@ public class WeixinServer extends HttpServlet {
 		}
 
 		// Get Request Parameters
-		String requestSignature = request.getParameter("signature");
-		String requestTimeStamp = request.getParameter("timestamp");
-		String requestNonce = request.getParameter("nonce");
-		String requestEchoStr = request.getParameter("echostr");
+		// String requestSignature = request.getParameter("signature");
+		// String requestTimeStamp = request.getParameter("timestamp");
+		// String requestNonce = request.getParameter("nonce");
+		// String requestEchoStr = request.getParameter("echostr");
 
 		// System.out.println(requestSignature);
 		// System.out.println(requestTimeStamp);
 		// System.out.println(requestNonce);
 		// System.out.println(requestEchoStr);
 
-		// Return XML
-		out.print(requestEchoStr);
+		// // Return XML
+		// out.print(requestEchoStr);
 
 		out.flush();
 		out.close();
