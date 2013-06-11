@@ -1,7 +1,5 @@
 package com.louishong.ibg.weixin.ai;
 
-import java.sql.SQLException;
-
 public class TestTextAi {
 
 	/**
@@ -9,7 +7,8 @@ public class TestTextAi {
 	 */
 	public static void main(String[] args) {
 		System.out.println(TextAI.textEngine("今天谁做微报"));
-
+		System.out.println(TextAI.textEngine("今天谁做微报"));
+//		System.out.println(TextAI.textEngine("今天谁做微报"));
 	}
 
 }

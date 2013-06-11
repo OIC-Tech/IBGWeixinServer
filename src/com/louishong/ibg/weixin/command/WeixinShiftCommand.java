@@ -8,34 +8,38 @@ import com.louishong.database.WeixinShiftWrapper;
 
 public class WeixinShiftCommand {
 
-	public static String execute(String command) throws Exception {
+	public static String execute(String command) throws SQLException {
 
 		// Check if the command is "Today"
 		if (command.equals("Today")) {
 			// Get the database with the columns ChineseName NextShift Period
-			ResultSet results = WeixinShiftWrapper.getWeixinShift();
+			WeixinShiftWrapper shiftWrapper = new WeixinShiftWrapper();
+			ResultSet results = shiftWrapper.getWeixinShift();
 			ArrayList<String> names = new ArrayList<String>();
 
 			while (results.next()) {
 				String name = results.getString("ChineseName");
 
-				boolean isToday = WeixinShiftWrapper.isShiftDaysAfter(name, 0);
+				boolean isToday = shiftWrapper.isShiftDaysAfter(name, 0);
 				if (isToday) {
 					names.add(name);
 				}
 			}
-
+			
 			String stringResult = "今天";
 			for (String name : names) {
 				stringResult += name;
 				stringResult += ", ";
 			}
-			stringResult = stringResult.substring(0, stringResult.length() - 2);
-			stringResult += "做微报~";
-			
+			if (!names.isEmpty()) {
+				stringResult = stringResult.substring(0, stringResult.length() - 2);
+				stringResult += "做微报~";
+			} else {
+				stringResult += "没有人做微报~";
+			}
 			return stringResult;
 
 		}
-		throw (new Exception("False Command"));
+		return null;
 	}
 }

@@ -5,7 +5,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-import java.io.Console;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
@@ -53,8 +52,25 @@ public class TextAI {
 	}
 
 	public static String textEngine(String inputString) {
+//		try {
+//			// ResultSet dbResults =
+//			// IBGWeixinServerResponseDatabase.searchResponse(inputString);
+//			
+//			IBGWeixinServerResponseDatabase responseDatabase = new IBGWeixinServerResponseDatabase();
+//			String result2 = responseDatabase.searchResponse(inputString).toString();
+//			responseDatabase.cutConnection();
+//			String result1 = WeixinShiftCommand.execute("Today");
+//			return result1 + "\n" + result2;
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return "";
+//		}
+		
+		
 		try {
-			ResultSet dbResults = IBGWeixinServerResponseDatabase.searchResponse(inputString);
+			IBGWeixinServerResponseDatabase responseDatabase = new IBGWeixinServerResponseDatabase();
+			ResultSet dbResults = responseDatabase.searchResponse(inputString);
 			boolean isDynamic = dbResults.getString("Dynamic").equals("1");
 			String response = dbResults.getString("Responses");
 
@@ -75,10 +91,11 @@ public class TextAI {
 				}
 
 			}
-			return response;
+			return "听不懂~听不懂~~对不起主人";
 		} catch (SQLException e) {
-			//If database doesn't contain the preset for the input, then return an apologies
-			return "听布咚~听布咚~~对不起主人";
+			// If database doesn't contain the preset for the input, then return
+			// an apologies
+			return "听不懂~听不懂~~对不起主人";
 		}
 	}
 

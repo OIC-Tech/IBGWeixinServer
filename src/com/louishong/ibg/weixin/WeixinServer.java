@@ -79,69 +79,6 @@ public class WeixinServer extends HttpServlet {
 		}
 	}
 
-	protected WeixinMessage readRequest(HttpServletRequest request) {
-		// Set stream up with the Stax Parser
-		try {
-			request.setCharacterEncoding("UTF-8");
-			InputStream requestInputStream = request.getInputStream();
-			XMLInputFactory factory = XMLInputFactory.newInstance();
-			XMLEventReader eventReader = factory.createXMLEventReader(requestInputStream);
-
-			// init Item Text
-			WeixinMessage message = new WeixinMessage();
-
-			// Loop through each node and inserts data into the object message
-			while (eventReader.hasNext()) {
-				XMLEvent event = eventReader.nextEvent();
-
-				if (event.isStartElement()) {
-					// get element as StartElement and inputs into the
-					// WeixinMessage
-					StartElement startElement = event.asStartElement();
-					// if it is ToUserName
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.TO_USER_NAME)) {
-						event = eventReader.nextEvent();
-						message.setToUserName(event.asCharacters().getData());
-						continue;
-					}
-
-					// if it is FromUserName
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.FROM_USER_NAME)) {
-						event = eventReader.nextEvent();
-						message.setFromUserName(event.asCharacters().getData());
-						continue;
-					}
-
-					// if it is CreateTime
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.CREATE_TIME)) {
-						event = eventReader.nextEvent();
-						message.setCreateTime(event.asCharacters().getData());
-						continue;
-					}
-					// if it is MsgType
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.MSG_TYPE)) {
-						event = eventReader.nextEvent();
-						String type = event.asCharacters().getData();
-						message.setMsgType(type);
-
-						if (type.equals(WeixinMessage.TEXT)) {
-							message = TextAI.input(message, event, eventReader);
-						} else {
-							message = TextAI.input(message, event, eventReader, 400);
-						}
-					}
-				}
-			}
-			return message;
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XMLStreamException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	protected void respondRequest(HttpServletRequest request, PrintWriter out) {
 		WeixinMessage message = readRequest(request);
 		// if (((Text) message).getMsgType().equals(WeixinMessage.TEXT)) {
@@ -238,4 +175,68 @@ public class WeixinServer extends HttpServlet {
 
 	}
 
+	protected WeixinMessage readRequest(HttpServletRequest request) {
+		// Set stream up with the Stax Parser
+		try {
+			request.setCharacterEncoding("UTF-8");
+			InputStream requestInputStream = request.getInputStream();
+			XMLInputFactory factory = XMLInputFactory.newInstance();
+			XMLEventReader eventReader = factory.createXMLEventReader(requestInputStream);
+
+			// init Item Text
+			WeixinMessage message = new WeixinMessage();
+
+			// Loop through each node and inserts data into the object message
+			while (eventReader.hasNext()) {
+				XMLEvent event = eventReader.nextEvent();
+
+				if (event.isStartElement()) {
+					// get element as StartElement and inputs into the
+					// WeixinMessage
+					StartElement startElement = event.asStartElement();
+					// if it is ToUserName
+					if (startElement.getName().getLocalPart().equals(WeixinMessage.TO_USER_NAME)) {
+						event = eventReader.nextEvent();
+						message.setToUserName(event.asCharacters().getData());
+						continue;
+					}
+
+					// if it is FromUserName
+					if (startElement.getName().getLocalPart().equals(WeixinMessage.FROM_USER_NAME)) {
+						event = eventReader.nextEvent();
+						message.setFromUserName(event.asCharacters().getData());
+						continue;
+					}
+
+					// if it is CreateTime
+					if (startElement.getName().getLocalPart().equals(WeixinMessage.CREATE_TIME)) {
+						event = eventReader.nextEvent();
+						message.setCreateTime(event.asCharacters().getData());
+						continue;
+					}
+					// if it is MsgType
+					if (startElement.getName().getLocalPart().equals(WeixinMessage.MSG_TYPE)) {
+						event = eventReader.nextEvent();
+						String type = event.asCharacters().getData();
+						message.setMsgType(type);
+
+						if (type.equals(WeixinMessage.TEXT)) {
+							message = TextAI.input(message, event, eventReader);
+						} else {
+							message = TextAI.input(message, event, eventReader, 400);
+						}
+					}
+				}
+			}
+			return message;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (XMLStreamException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
 }
