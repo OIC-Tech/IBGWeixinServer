@@ -17,7 +17,8 @@ import com.louishong.database.IBGWeixinServerResponseDatabase;
 
 public class TextAI {
 
-	public static WeixinMessage input(WeixinMessage message, XMLEvent event, XMLEventReader eventReader) {
+	public static WeixinMessage input(WeixinMessage message, XMLEvent event,
+			XMLEventReader eventReader) {
 		try {
 			// Downwards casting
 			Text text = new Text(message);
@@ -28,7 +29,8 @@ public class TextAI {
 
 					// If the Element is CONTENT generate a response and put it
 					// inside the text object
-					if (textStartElement.getName().getLocalPart().equals(Text.CONTENT)) {
+					if (textStartElement.getName().getLocalPart()
+							.equals(Text.CONTENT)) {
 						event = eventReader.nextEvent();
 						String inputString = event.asCharacters().getData();
 						// Input the inputString into the textEngine to
@@ -37,7 +39,8 @@ public class TextAI {
 					}
 					// If the element is MSGID then set MSGID to the original
 					// MESGID
-					if (textStartElement.getName().getLocalPart().equals(Text.MSGID)) {
+					if (textStartElement.getName().getLocalPart()
+							.equals(Text.MSGID)) {
 						event = eventReader.nextEvent();
 						text.setMsgId(event.asCharacters().getData());
 					}
@@ -52,22 +55,23 @@ public class TextAI {
 	}
 
 	public static String textEngine(String inputString) {
-//		try {
-//			// ResultSet dbResults =
-//			// IBGWeixinServerResponseDatabase.searchResponse(inputString);
-//			
-//			IBGWeixinServerResponseDatabase responseDatabase = new IBGWeixinServerResponseDatabase();
-//			String result2 = responseDatabase.searchResponse(inputString).toString();
-//			responseDatabase.cutConnection();
-//			String result1 = WeixinShiftCommand.execute("Today");
-//			return result1 + "\n" + result2;
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			return "";
-//		}
-		
-		
+		// try {
+		// // ResultSet dbResults =
+		// // IBGWeixinServerResponseDatabase.searchResponse(inputString);
+		//
+		// IBGWeixinServerResponseDatabase responseDatabase = new
+		// IBGWeixinServerResponseDatabase();
+		// String result2 =
+		// responseDatabase.searchResponse(inputString).toString();
+		// responseDatabase.cutConnection();
+		// String result1 = WeixinShiftCommand.execute("Today");
+		// return result1 + "\n" + result2;
+		// } catch (SQLException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// return "";
+		// }
+
 		try {
 			IBGWeixinServerResponseDatabase responseDatabase = new IBGWeixinServerResponseDatabase();
 			ResultSet dbResults = responseDatabase.searchResponse(inputString);
@@ -82,24 +86,24 @@ public class TextAI {
 				String command = matcher.group(2);
 
 				if (protocol.equals("WeixinShift")) {
-					try {
-						return WeixinShiftCommand.execute(command);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					return WeixinShiftCommand.execute(command);
 				}
 
 			}
+			// If nothing matches but no exceptions are thrown, Then As backup,
+			// return this line of text.
 			return "听不懂~听不懂~~对不起主人";
 		} catch (SQLException e) {
 			// If database doesn't contain the preset for the input, then return
 			// an apologies
 			return "听不懂~听不懂~~对不起主人";
+		} catch (Exception e1) {
+			return "我的脑袋出问题了，主人给你看错误代码：" + e1.toString();
 		}
 	}
 
-	public static WeixinMessage input(WeixinMessage message, XMLEvent event, XMLEventReader eventReader, int statusCode) {
+	public static WeixinMessage input(WeixinMessage message, XMLEvent event,
+			XMLEventReader eventReader, int statusCode) {
 		message.setMsgType("text");
 		Text text = new Text(message);
 		text.setContent("我的服务器出现故障了~~~~ 故障代码: " + statusCode);
@@ -108,7 +112,8 @@ public class TextAI {
 				event = eventReader.nextEvent();
 				if (event.isStartElement()) {
 					StartElement textStartElement = event.asStartElement();
-					if (textStartElement.getName().getLocalPart().equals(Text.MSGID)) {
+					if (textStartElement.getName().getLocalPart()
+							.equals(Text.MSGID)) {
 						event = eventReader.nextEvent();
 						text.setMsgId(event.asCharacters().getData());
 					}
