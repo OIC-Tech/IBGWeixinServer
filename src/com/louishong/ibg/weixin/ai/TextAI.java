@@ -92,12 +92,13 @@ public class TextAI {
 			}
 			// If nothing matches but no exceptions are thrown, Then As backup,
 			// return this line of text.
-			return "听不懂~听不懂~~对不起主人";
+			return response;
 		} catch (SQLException e) {
 			// If database doesn't contain the preset for the input, then return
 			// an apologies
 			return "听不懂~听不懂~~对不起主人";
 		} catch (Exception e1) {
+			e1.printStackTrace();
 			return "我的脑袋出问题了，主人给你看错误代码：" + e1.toString();
 		}
 	}

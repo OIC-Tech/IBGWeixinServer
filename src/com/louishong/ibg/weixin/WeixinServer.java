@@ -30,7 +30,8 @@ public class WeixinServer extends HttpServlet {
 
 	private static final long serialVersionUID = 7277121887678658652L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) {
 		// System.out.println(request.getRemoteHost());
 		PrintWriter out = null;
 		try {
@@ -67,7 +68,8 @@ public class WeixinServer extends HttpServlet {
 
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/xml;charset=UTF-8");
 		// Get Writer
 		try {
@@ -101,26 +103,40 @@ public class WeixinServer extends HttpServlet {
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLEventWriter writer = outputFactory.createXMLEventWriter(out);
 
-			StartDocument startDocument = xmlEventFactory.createStartDocument("UTF-8", "1.0");
+			StartDocument startDocument = xmlEventFactory.createStartDocument(
+					"UTF-8", "1.0");
 			writer.add(startDocument);
 
-			StartElement rootStartElement = xmlEventFactory.createStartElement("", "", "xml");
+			StartElement rootStartElement = xmlEventFactory.createStartElement(
+					"", "", "xml");
 
-			StartElement toUserNameStartElement = xmlEventFactory.createStartElement("", "", "ToUserName");
-			Characters toUserNameChar = xmlEventFactory.createCData(message.getFromUserName());
-			EndElement toUserNameEndElement = xmlEventFactory.createEndElement("", "", "ToUserName");
+			StartElement toUserNameStartElement = xmlEventFactory
+					.createStartElement("", "", "ToUserName");
+			Characters toUserNameChar = xmlEventFactory.createCData(message
+					.getFromUserName());
+			EndElement toUserNameEndElement = xmlEventFactory.createEndElement(
+					"", "", "ToUserName");
 
-			StartElement fromUserNameStartElement = xmlEventFactory.createStartElement("", "", "FromUserName");
-			Characters fromUserNameChar = xmlEventFactory.createCData(message.getToUserName());
-			EndElement fromUserNameEndElement = xmlEventFactory.createEndElement("", "", "FromUserName");
+			StartElement fromUserNameStartElement = xmlEventFactory
+					.createStartElement("", "", "FromUserName");
+			Characters fromUserNameChar = xmlEventFactory.createCData(message
+					.getToUserName());
+			EndElement fromUserNameEndElement = xmlEventFactory
+					.createEndElement("", "", "FromUserName");
 
-			StartElement createTimeStartElement = xmlEventFactory.createStartElement("", "", "CreateTime");
-			Characters createTimeChar = xmlEventFactory.createCData(message.getCreateTime());
-			EndElement createTimeEndElement = xmlEventFactory.createEndElement("", "", "CreateTime");
+			StartElement createTimeStartElement = xmlEventFactory
+					.createStartElement("", "", "CreateTime");
+			Characters createTimeChar = xmlEventFactory.createCData(message
+					.getCreateTime());
+			EndElement createTimeEndElement = xmlEventFactory.createEndElement(
+					"", "", "CreateTime");
 
-			StartElement msgTypeStartElement = xmlEventFactory.createStartElement("", "", "MsgType");
-			Characters msgTypeChar = xmlEventFactory.createCData(message.getMsgType());
-			EndElement msgTypeEndElement = xmlEventFactory.createEndElement("", "", "Type");
+			StartElement msgTypeStartElement = xmlEventFactory
+					.createStartElement("", "", "MsgType");
+			Characters msgTypeChar = xmlEventFactory.createCData(message
+					.getMsgType());
+			EndElement msgTypeEndElement = xmlEventFactory.createEndElement("",
+					"", "Type");
 
 			writer.add(rootStartElement);
 
@@ -142,13 +158,18 @@ public class WeixinServer extends HttpServlet {
 
 			if (message.getMsgType().equals(WeixinMessage.TEXT)) {
 
-				StartElement contentStartElement = xmlEventFactory.createStartElement("", "", "Content");
-				Characters contentChar = xmlEventFactory.createCData(((Text) message).getContent());
-				EndElement contentEndElement = xmlEventFactory.createEndElement("", "", "Content");
+				StartElement contentStartElement = xmlEventFactory
+						.createStartElement("", "", "Content");
+				Characters contentChar = xmlEventFactory
+						.createCData(((Text) message).getContent());
+				EndElement contentEndElement = xmlEventFactory
+						.createEndElement("", "", "Content");
 
-				StartElement funcFlagStartElement = xmlEventFactory.createStartElement("", "", "funcFlagStartElement");
+				StartElement funcFlagStartElement = xmlEventFactory
+						.createStartElement("", "", "funcFlagStartElement");
 				Characters funcFlagChar = xmlEventFactory.createCharacters("0");
-				EndElement funcFlagEndElement = xmlEventFactory.createEndElement("", "", "FuncFlag");
+				EndElement funcFlagEndElement = xmlEventFactory
+						.createEndElement("", "", "FuncFlag");
 
 				writer.add(contentStartElement);
 				writer.add(contentChar);
@@ -159,7 +180,8 @@ public class WeixinServer extends HttpServlet {
 				writer.add(funcFlagEndElement);
 			}
 
-			EndElement rootEndElement = xmlEventFactory.createEndElement("", "", "xml");
+			EndElement rootEndElement = xmlEventFactory.createEndElement("",
+					"", "xml");
 			writer.add(rootEndElement);
 
 			EndDocument endDocument = xmlEventFactory.createEndDocument();
@@ -181,7 +203,8 @@ public class WeixinServer extends HttpServlet {
 			request.setCharacterEncoding("UTF-8");
 			InputStream requestInputStream = request.getInputStream();
 			XMLInputFactory factory = XMLInputFactory.newInstance();
-			XMLEventReader eventReader = factory.createXMLEventReader(requestInputStream);
+			XMLEventReader eventReader = factory
+					.createXMLEventReader(requestInputStream);
 
 			// init Item Text
 			WeixinMessage message = new WeixinMessage();
@@ -195,27 +218,31 @@ public class WeixinServer extends HttpServlet {
 					// WeixinMessage
 					StartElement startElement = event.asStartElement();
 					// if it is ToUserName
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.TO_USER_NAME)) {
+					if (startElement.getName().getLocalPart()
+							.equals(WeixinMessage.TO_USER_NAME)) {
 						event = eventReader.nextEvent();
 						message.setToUserName(event.asCharacters().getData());
 						continue;
 					}
 
 					// if it is FromUserName
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.FROM_USER_NAME)) {
+					if (startElement.getName().getLocalPart()
+							.equals(WeixinMessage.FROM_USER_NAME)) {
 						event = eventReader.nextEvent();
 						message.setFromUserName(event.asCharacters().getData());
 						continue;
 					}
 
 					// if it is CreateTime
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.CREATE_TIME)) {
+					if (startElement.getName().getLocalPart()
+							.equals(WeixinMessage.CREATE_TIME)) {
 						event = eventReader.nextEvent();
 						message.setCreateTime(event.asCharacters().getData());
 						continue;
 					}
 					// if it is MsgType
-					if (startElement.getName().getLocalPart().equals(WeixinMessage.MSG_TYPE)) {
+					if (startElement.getName().getLocalPart()
+							.equals(WeixinMessage.MSG_TYPE)) {
 						event = eventReader.nextEvent();
 						String type = event.asCharacters().getData();
 						message.setMsgType(type);
@@ -223,7 +250,8 @@ public class WeixinServer extends HttpServlet {
 						if (type.equals(WeixinMessage.TEXT)) {
 							message = TextAI.input(message, event, eventReader);
 						} else {
-							message = TextAI.input(message, event, eventReader, 400);
+							message = TextAI.input(message, event, eventReader,
+									400);
 						}
 					}
 				}
@@ -238,5 +266,4 @@ public class WeixinServer extends HttpServlet {
 		return null;
 	}
 
-	
 }
