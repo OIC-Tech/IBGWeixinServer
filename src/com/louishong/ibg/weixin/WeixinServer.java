@@ -37,7 +37,6 @@ public class WeixinServer extends HttpServlet {
 		try {
 			out = response.getWriter();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		// Set Response Type
@@ -191,7 +190,6 @@ public class WeixinServer extends HttpServlet {
 			writer.close();
 
 		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

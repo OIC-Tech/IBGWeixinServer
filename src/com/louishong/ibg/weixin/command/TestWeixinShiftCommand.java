@@ -11,7 +11,6 @@ public class TestWeixinShiftCommand {
 			System.out.println(WeixinShiftCommand.execute("Today"));
 			System.out.println(WeixinShiftCommand.execute("Today"));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

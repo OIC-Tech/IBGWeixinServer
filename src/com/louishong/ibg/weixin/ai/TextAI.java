@@ -67,7 +67,7 @@ public class TextAI {
 		// String result1 = WeixinShiftCommand.execute("Today");
 		// return result1 + "\n" + result2;
 		// } catch (SQLException e) {
-		// // TODO Auto-generated catch block
+		//
 		// e.printStackTrace();
 		// return "";
 		// }
@@ -120,7 +120,6 @@ public class TextAI {
 					}
 				}
 			} catch (XMLStreamException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

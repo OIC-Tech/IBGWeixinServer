@@ -22,7 +22,7 @@ public class WeixinShiftCommand {
 				String name = results.getString("ChineseName");
 
 				boolean isToday = shiftWrapper.isShiftDaysAfter(name, 0);
-				if (isToday) {
+				if (isToday && !names.contains(name)) {
 					names.add(name);
 				}
 			}
