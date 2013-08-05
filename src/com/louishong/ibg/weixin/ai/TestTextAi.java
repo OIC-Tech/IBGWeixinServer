@@ -6,7 +6,7 @@ public class TestTextAi {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println(TextAI.textEngine("ÄãºÃ"));
+		System.out.println(TextAI.textEngine("Hello"));
 	}
 
 }
