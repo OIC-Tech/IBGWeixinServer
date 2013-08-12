@@ -1,20 +1,19 @@
 package com.louishong.ibg.weixin.ai;
 
+import java.sql.ResultSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
+import com.louishong.database.GravifileAIDatabase;
 import com.louishong.ibg.exception.NoResponseFoundException;
 import com.louishong.ibg.weixin.command.WeixinShiftCommand;
 import com.louishong.ibg.weixin.model.Text;
 import com.louishong.ibg.weixin.model.WeixinMessage;
-import com.louishong.database.GravifileAIDatabase;
 
 public class TextAI {
 
@@ -97,7 +96,7 @@ public class TextAI {
 		} catch (NoResponseFoundException e) {
 			// If database doesn't contain the preset for the input, then return
 			// an apologies
-			return "听不懂~听不懂~~对不起主人";
+			return "听不懂~听不懂~~对不起主人, 需要帮助打一个问号(?)";
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return "我的脑袋出问题了，主人给你看错误代码：" + e1.getLocalizedMessage();

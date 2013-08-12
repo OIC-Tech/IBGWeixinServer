@@ -1,8 +1,6 @@
 package com.louishong.ibg.weixin.command;
 
 import java.io.IOException;
-import java.sql.Array;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -33,7 +31,7 @@ public class WeixinShiftCommand {
 
 		String stringResult = "½ñÌì";
 		for (Integer UID : UIDs) {
-			stringResult += profileWrapper.getName(UID);
+			stringResult += profileWrapper.getNickName(UID);
 			stringResult += ", ";
 		}
 		if (!UIDs.isEmpty()) {

@@ -82,21 +82,6 @@ public class WeixinServer extends HttpServlet {
 
 	protected void respondRequest(HttpServletRequest request, PrintWriter out) {
 		WeixinMessage message = readRequest(request);
-		// if (((Text) message).getMsgType().equals(WeixinMessage.TEXT)) {
-		// String response = String.format("<xml>\n"
-		// + "<ToUserName><![CDATA[%s]]></ToUserName>\n"
-		// + "<FromUserName><![CDATA[%s]]></FromUserName>\n"
-		// + "<CreateTime>%s</CreateTime>\n"
-		// + "<MsgType><![CDATA[text]]></MsgType>\n"
-		// + "<Content><![CDATA[%s]]></Content>\n"
-		// + "<FuncFlag>0</FuncFlag>\n" + "</xml>",
-		// ((Text) message).getFromUserName(),
-		// ((Text) message).getToUserName(),
-		// ((Text) message).getCreateTime(), "Hello World!");
-		// System.out.println(message.getToUserName());
-		// return response;
-		// }
-
 		try {
 			XMLEventFactory xmlEventFactory = XMLEventFactory.newInstance();
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
